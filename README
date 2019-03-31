@@ -1,0 +1,79 @@
+			      fcrypt.py
+			      ---------
+
+This is a pure Python implementation of the Unix DES password crypt
+function.  It was ported from C code by Eric Young (eay@mincom.oz.au).
+See the file LICENSE for copyright and license details.
+
+This module is packaged with Distutils.  If you have this installed,
+or it came with your version of Python, you can install it by typing:
+
+    python setup.py install
+
+If not, you can just copy 'fcrypt.py' into a directory on your Python
+library path, or into the same directory as the program that wants to
+use it.
+
+
+  crypt(3) Extensions
+  -------------------
+
+The crypt function in OpenBSD's C library includes extensions to the
+crypt algorithm where the salt, or "setting," may start with a special
+character; '_' for an extended DES algorithm with a longer salt and
+password, $1 for MD5 hashing and $2 for Blowfish hashing.  The
+crypt function in the GNU C Library supports $1 for MD5 hashing.
+
+However, fcrypt does not support any extensions.  If you try to use
+any of them, the first two characters of the setting will be used as
+the salt, making fcrypt even less secure than usual.
+
+
+  Known Issues
+  ------------
+
+The Python fcrypt module is designed for the implicit truncation of
+int values to 32 bits that occurs in some cases in Python 2.2 and
+earlier.  Python 2.3 behaves the same, but generates warnings that the
+behaviour will change in Python 2.4.  I believe that fcrypt will still
+work under Python 2.4, but it will become slower as ints are
+implicitly promoted to longs in its calculations.
+
+In the meantime, you can silence the warnings by starting Python 2.3
+with an extra argument, as follows:
+
+    $ python -Wignore::FutureWarning:fcrypt
+
+Alternatively, you can add code to disable the warnings before
+importing fcrypt:
+
+    if sys.version[:3] == '2.3':
+        import warnings
+        warnings.filterwarnings('ignore', '', FutureWarning, '^fcrypt$')
+    import fcrypt
+
+
+  Related Links
+  -------------
+
+For more information, see the documentation for Python's built-in
+crypt module at:
+
+    http://www.python.org/doc/current/lib/module-crypt.html
+
+michal j wallace's md5crypt for Python is available from:
+
+    http://www.sabren.net/code/python/crypt/index.php3
+
+Eric Young's fcrypt.c is available from:
+
+    ftp://ftp.psy.uq.oz.au/pub/Crypto/DES/
+
+For more Distutils information, see:
+
+    http://www.python.org/doc/current/inst/inst.html
+    http://www.python.org/sigs/distutils-sig/
+
+-- 
+Carey Evans  <careye@spamcop.net>
+20 February 2004
